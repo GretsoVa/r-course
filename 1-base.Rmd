@@ -1,0 +1,974 @@
+---
+title: "r-base"
+author: "Maria Gretsova"
+date: "9/16/2021"
+output:
+  slidy_presentation: default
+---
+
+# 
+***R - интерпретируемый объектно-ориентированный язык программирования***
+
+- *готовая программа исполняется сразу — строчка за строчкой*
+- *функции или таблицы — это объекты, которые относятся к определённому типу данных*
+
+***Анализ данных в R***
+
+- преобразование данных (dplyr, data.table) 
+- исследование и моделирование данных
+- статистическая обработка данных
+- визуализация данных (ggplot2)
+- составление отчетов (Rmarkdown)
+- машинное обучение 
+- созданиe интерактивных веб-приложений (shiny) 
+- биоинформатическая обработка данных (Bioconductor)
+
+
+ 
+# 
+***Установка R***
+
+ - Windows and OS X users can download R from CRAN [Comprehensive R Archive
+Network] [http://www.r-project.org/]
+
+ - Ubuntu and Debian users can install R package *r-base* using their package management
+tool.
+
+***Работа в R***
+
+- RStudio: https://www.r-studio.com
+
+
+
+# 
+***Операторы присваивания***
+
+```R
+name = value
+
+name <- value
+
+value -> name
+```
+- при написании имени можно использовать буквы, цифцы, знаки '.'  и '_'
+- имя не может начинаться с '_' или '.'
+- в качестве имен нельзя использовать служебные слова (TRUE, NULL, if,
+and function ...)
+
+
+
+```{r}
+median(a <- 4)
+```
+
+```R
+median(a = 4)
+```
+```R
+Error in is.factor(x) : argument "x" is missing, with no default
+```
+
+#
+***Рабочее пространство (Workspace)***
+
+- каждое значение объявленное в коммандной строке сохраняется в так называемой *global enviroment*, которая также именуется текущем *рабочем пространстве*
+
+- ***ls()*** - список переменных текущего рабочего пространства
+
+- ***ls.str()*** - список перемен и их описание
+
+- ***rm()*** - удаляет значение из текущего рабочего пространства
+
+- ***save.image()*** - сохраняет текущее  *рабочее пространство* в формате RData
+
+```{r}
+a <- 4
+b <- 5
+ls.str()
+rm(a)
+ls.str()
+```
+
+
+
+#
+***Типы значений***
+
+- logical (TRUE/FALSE)
+- integer ( целые числа)
+- numeric/double (числа с плавающей точкой)
+- complex (комплексные числа)
+- character (строки)
+- raw (байтовые последовательности)
+
+# 
+***Базовые струтуры данных:***
+
+- *вектор*
+
+- *матрица*
+
+- *список*
+
+- *dataFrame*
+
+# 
+***Вектор***
+
+- *индексированная последовательность элементов одного типа*
+
+```{r}
+a <- c(2,3,4)
+```
+
+```{r}
+a <- vector(length = 3)
+a[1] <- 2
+a[2] <- 3
+a[3] <- 4
+```
+
+```{r}
+a <- c(2, c(3,4))
+
+```
+
+# 
+***Естественное приведение типов:***
+logical – integer – double - character
+
+***функция typeof()***
+```{r warning= F, message=F}
+a = c('one', 'two', 3, TRUE)
+typeof(a)
+```
+
+***функции is.\*() и as.*()**
+
+
+```{r warning= F, message=F}
+typeof(a)
+y = as.integer(a) 
+y
+is.integer(y)
+```
+
+
+# 
+***Создание фектора функцией seq()***
+```{r warning= F, message=F}
+a <- 2:10
+```
+
+```{r}
+a <- seq(2, 10, by = 1.5)
+a
+```
+
+```{r}
+a <- seq(2, 10, length = 3)
+a
+
+```
+
+# 
+***Создание вектора функцией rep()***
+```{r}
+a <- rep(1:3, times = 3) 
+a
+```
+
+```{r}
+a <- rep(1:3, each = 4)
+a
+
+```
+
+```{r}
+a <- rep(1:3, length.out = 5)
+a
+```
+
+#
+***Принудительное изменение длины вектора***
+
+```{r}
+x <- 1:10
+x
+length(x) <- 5
+x
+length(x) <- 7
+x
+```
+
+#
+***Вектор с проименованными элементами***
+
+```{r warning= F, message=F}
+a <- c(uno = 1, dos = 2, 'new' = 3, 4)
+names(a)
+names(a) <- NA
+a$uno <- 1
+a
+```
+
+#
+***Векторизация функций и операторов***
+
+
+```{r warning= F, message=F}
+a <- (1:5)
+a ^ 2
+```
+
+```{r warning= F, message=F}
+a <- (4:7) 
+b <- (3:6)
+a * b
+```
+
+```{r warning= F, message=F}
+a <- 'a'
+b <- 1:2
+paste0(a, b)
+```
+
+# 
+***Арифметика на векторах разной длины:***
+
+1. Длина результата равна длине большего из векторов
+2. Меньший вектор дублируется (переписывается) несколько раз, чтобы длина переписанного вектора совпала с длиной большего
+3. Если длина большего вектора не делится нацело на длину меньшего , то выдается предупреждение
+
+
+```{r warning= F, message=F}
+a <- 1:4 
+b <- 1:8
+a + b
+```
+
+```{r warning= F, message=F}
+a <- 1:4 
+b <- 1:7
+a + b
+```
+
+```{r warning= F, message=F}
+1:4 >= 2
+```
+
+```{r warning= F, message=F}
+1:4 >= 1:2
+```
+
+# 
+***Индексация векторов***
+
+- *положительные индексы*
+- *отрицательные индексы*
+- *логические индексы*
+
+
+
+# 
+***Индексация векторов***
+
+- ***положительные индексы***
+- *отрицательные индексы*
+- *логические индексы*
+
+
+```{r}
+x
+x[3]
+x[3:5]
+```
+
+# 
+***Индексация векторов***
+
+- *положительные индексы*
+- ***отрицательные индексы***
+- *логические индексы*
+
+
+```{r}
+x
+x[-5]
+x[-5:-3]
+```
+
+# 
+***Индексация векторов***
+
+- *положительные индексы*
+- *отрицательные индексы*
+- ***логические индексы***
+
+```{r}
+x <- seq(10, 100, by = 10)
+
+x[rep(c(TRUE, FALSE), 5)]
+
+x[x  > 77 & x < 99]
+```
+
+#
+***Еще некоторые функции над векторами***
+
+
+```{r}
+all(1:4 > 3)
+```
+
+```{r}
+any(1:4 > 3)
+```
+
+
+```{r}
+which(1:4 > 3)
+```
+
+
+```{r}
+which.max(1:4)
+```
+
+
+```{r}
+which.min(1:4)
+```
+
+#
+***Матрица***
+
+ - *двумерный вектор*
+
+```{r}
+m <- matrix(1:6, nrow = 2, ncol = 3)
+m
+
+m <- matrix(1:6, nrow = 2)
+m
+
+m <- matrix(1:6, ncol = 3, byrow = TRUE)
+m
+
+```
+
+
+
+#
+***Размерность матрицы***
+
+
+```{r}
+dim(m) <- NULL 
+m
+
+dim(m) <- c(3, 2)
+m
+
+```
+
+#
+***Арифметические операторы (+, -, *, /) действуют поэлементно***
+
+
+```{r}
+m1 = matrix(1:10, nrow = 2)
+m1
+```
+
+
+```{r}
+m2 = matrix(2:11, nrow = 2)
+m2
+m1 * m2
+```
+
+```{r}
+m1 %*% t(m2)
+```
+
+#
+***rbind() / cbind() – присоединение матриц по строкам / столбцам***
+
+```{R}
+m1
+m2
+
+rbind(m1, m2)
+cbind(m1, m2)
+```
+
+
+#
+***rowSums() / colSums() – суммирование по строкам / столбцам***
+
+
+```{r}
+m1
+rowSums(m1)
+colSums(m1)
+```
+
+***rowMeans() / colMeans() - среднии значения по строкам / столбцам***
+
+
+```{r}
+rowMeans(m1)
+colMeans(m1)
+```
+
+# 
+***Именованные матрицы***
+
+
+```{r}
+m <- matrix(1:10, ncol = 5)
+rownames(m) <- c("row1", "row2")
+colnames(m) <- paste0("column", 1:5)
+m
+```
+
+#
+***Индексирование матриц***
+
+
+```{r}
+m <- matrix(1:10, ncol = 5)
+m[1,]
+m[,1]
+m[,1, drop=FALSE]
+
+m[,2:3]
+```
+
+#
+***Список***
+
+- *индексированная последовательность*
+
+```{r}
+list(1:2, 'data', matrix(1, nrow=2, ncol=2)) 
+```
+
+#
+***Именованные списки***
+
+
+```{r}
+list(uno = 'uno', second = 2, 4:5, fourth = matrix(1, nrow = 2, ncol = 2))
+```
+
+#
+***Конкатенация списков***
+
+
+```{r}
+l1 = list(uno = 'uno', second = 2, 4:5, fourth = matrix(1, nrow = 2, ncol = 2))
+l2 = list(first = 'first', 7:8 )
+l3 = c(l1, l2)
+l3
+```
+
+#
+***Доступ к элементам списка***
+
+
+```{r}
+l3[4] #возвращаемое значение - подсписок
+```
+
+```{r}
+l3[[4]] #возвращаемое значение - элемент списка
+```
+
+```{r}
+l3$fourth #возвращаемое значение - элемент списка
+```
+
+
+```{r}
+l3[4]$fourth
+```
+
+
+
+#
+***DataFrame***
+
+- *таблица из наблюдейний и переменных*
+
+
+```{R}
+df = data.frame(x = 1:4, y = LETTERS[1:4], z = c(T, F))
+df
+```
+
+***str() - сводка об объекте***
+```{R}
+str(df)
+```
+
+#
+***nrow(), ncol(), dim()***
+
+
+```{R}
+nrow(df)
+```
+
+
+```{r}
+ncol(df)
+# length(df)
+```
+
+
+```{r}
+dim(df)
+```
+
+
+```{r}
+names(df)
+colnames(df)
+```
+
+```{r}
+rownames(df) = c('s','f','k','T')
+
+```
+
+# 
+***Индексация DataFrame***
+
+- *как у матриц*
+- *как у списков*
+
+
+
+#
+***Индексация DataFrame***
+
+- ***как у матриц***
+- *как у списков*
+
+
+```{r}
+df[3:4, -1]
+```
+
+
+```{r}
+df[c(T, F), c("z", "x")]
+```
+
+#
+***Индексация DataFrame***
+
+- *как у матриц*
+- ***как у списков***
+
+
+
+```{R}
+df$z
+```
+
+
+```{r}
+df[[3]]
+```
+
+```{r}
+df[["z"]]
+```
+
+
+```{r}
+df[df$x>2, 1:2]
+```
+
+# 
+***функция subset(df, <condition>)***
+
+
+```{r}
+subset(df, x>2, select = c(x,z))
+```
+
+
+***функция merge()***
+
+
+```{R}
+id = 1:3
+df1 = data.frame(id = id, letter1 = LETTERS[id])
+df2 = data.frame(id = id+1, letter2 = LETTERS[2*id])
+df1
+df2
+merge(df1, df2, by = 'id')
+```
+
+# ***Импорт/экспорт данных***
+
+- ***getwd()*** - текущая рабочая директория
+
+- ***setwd()*** - смена текущей рабочей директории
+
+- ***read.csv(file = 'filename.csv')/ read.table()*** - импорт DataFrame из comma/tab-separated файлов
+
+- ***write.csv(DataFrame, file = 'filename.csv')/ write.table()*** - экспорт DataFrame в comma/tab-separated файл
+
+- ***load()*** - добавление в текущее *рабочее пространство* значений из файла RData
+
+- ***save(value1,..., valuen, file = 'filename.Rdata')*** - сохранение перечисленных значения в файле RData 
+
+
+
+#
+***Управляющие конструкции***
+
+```R
+if(cond) expr
+```
+
+```R
+if(cond) {
+   expr1
+   ...
+   exprn
+}
+```
+
+
+```R
+if(cond) cons.expr  else  alt.expr
+```
+
+```R
+if(cond){
+   cons.expr1
+   ...
+   cons.exprn
+} else {
+  alt.expr1
+  ...
+  alt.exprn
+}
+
+```
+
+#
+***Циклы***
+
+```R
+for (value in vector) {
+   statements
+   if(condition) {
+      next
+   }
+}
+```
+
+```R
+while (test_expression) {
+   statement
+}
+```
+```R
+repeat { 
+   commands 
+   if(condition) {
+      break
+   }
+}
+```
+
+#
+***Объявление функции***
+
+```
+function(param1, ...., paramN) expr
+```
+```
+function(param1, ..., paramN) {
+ expr1
+ .
+ .
+ .
+ exprM
+}
+```
+
+#
+***Объявление функции***
+
+```
+function(param1, ...., paramN) expr
+```
+```{r}
+l <- 8;
+t <- function(x,y) return(x/2)
+t(l)
+t <- function(x,y) x/2
+t(l)
+```
+
+#
+***Enviroment***
+
+- присваивание имени объекту происходит в некоторой среде (enviroment)
+
+- среда похожа на список и отличается от него тем, что
+  - имена уникальны
+  - имена не упорядочены
+  - каждая среда имеет родительскую среду (кроме empty enviroment)
+  - не копируются при изменении
+
+- каждое значение объявленное в коммандной строке сохраняется в так называемой *global enviroment*, которая также именуется текущем *рабочем пространстве*
+
+# 
+***Enviroment***
+```{r}
+e1 <- rlang::env(
+a = FALSE,
+b = "a",
+c = 2.3,
+d = 1:3,
+)
+e1$a
+
+e2c <- rlang::env(rlang::empty_env(), d = 4, e = 5)
+e2d <- rlang::env(e2c, a = 1, b = 2, c = 3)
+rlang::env_parent(e2c)
+e2c
+rlang::env_parent(e2d)
+```
+
+#
+***Enviroment***
+
+```{r}
+f <- function(f_x){
+  g <- function(g_x){
+    z <- 6
+    print("Env g")
+    print(environment())
+    print("Parent env for g")
+    print(rlang::env_parent())
+  }
+  l <- 5
+  g(5)
+  print("Env f")
+  print(environment())
+  print("Parent env for f")
+  print(rlang::env_parent())
+}
+f()
+```
+
+#
+***Enviroment***
+
+```{r}
+f <- function(f_x){
+  g <- function(g_x){
+    z <- 6
+    print("Inside g")
+    print(ls())
+  }
+  l <- 5
+  g(5)
+  print("Inside f")
+  print(ls())
+}
+f()
+```
+
+#
+***Оператор присваивания <<- ***
+
+- '<-' всегда создает значение в текущей среде (current env), always creates a variable in the current environment.
+ - '<<-' не создает значение в текущей среде, но создает значение в родительской среде (parent env)
+```{r}
+rm(list = ls())
+l = 4
+t <- function(x,y) x <- x/2
+z = t(l)
+ls.str()
+t <- function(x,y) x <<- x/2
+z = t(l)
+ls.str()
+```
+
+#
+***Оператор присваивания <<- ***
+
+```{r}
+t <- function(x,y) l <- x/2
+z = t(l)
+ls.str()
+t <- function(x,y) l <<- x/2
+z = t(l)
+ls.str()
+```
+
+
+
+#
+***modify in place***
+```{r}
+e1 <- rlang::env(a = 1, b = 2, c = 3)
+e2 <- e1
+e1$c <- 4
+ls.str(e1)
+ls.str(e2)
+```
+
+#
+***copy-on-modify***
+```{r}
+e1 <- rlang::env(a = 1, b = 2, c = 3)
+list_e1 <- as.list(e1)
+list_e2 <- list_e1
+list_e1$c <- 4
+list_e1
+list_e2
+```
+
+
+
+#
+***Пакеты***
+
+- Установка пакета
+
+```R
+install.packages(с('packagename1', ..., 'packagenamen'))
+```
+- Подключение пакета
+
+```R
+library(packagename)
+```
+или
+```R
+require(packagename)
+```
+- Вызов функции из пакета без подключения пакета
+
+```R
+packagename::functionname()
+```
+- Удаление пакетов
+
+```R
+remove.packages(с('packagename1', ..., 'packagenamen'))
+```
+
+# 
+*пакеты и среда*
+```{r}
+environment()
+rlang::env_parent()
+require(rlang)
+env_parent()
+detach("package:rlang", unload = TRUE)
+rlang::env_parent()
+```
+
+
+#
+***lapply()***
+
+```{r}
+
+l = list(uno = 'uno', 
+         second = 2, 
+         4:5, 
+         fourth = matrix(1, nrow = 2, ncol = 2))
+
+lapply(l, length)
+
+```
+
+#
+*lapply()*
+```{r}
+df = data.frame(x = 1:4, y = LETTERS[1:4], z = c(T, F))
+df
+lapply(df, sort)
+rm(list=ls())
+```
+
+
+#
+***apply()***
+
+```{r}
+m = matrix(1:15, ncol = 3)
+m
+apply(m, 2, sum)
+apply(m, c(1,2), function(x) x-5)
+```
+
+#
+***apply()***
+
+```{r}
+df = data.frame(x = 1:4, y = LETTERS[1:4], z = c(T, F))
+df
+apply(df, 2, sort)
+apply(df, 1, sort)
+```
+
+#
+***Операторы в R - это вызов функции***.
+
+```{r}
+x <- list(1,25,64)
+x[2]
+
+`[`(x,2)
+
+do.call('[',list(x,2))
+
+```
+
+#
+*Изменение служебных слов*
+
+```
+* <- 10
+```
+```
+Error: unexpected '*' in "*"
+```
+
+```{r}
+`*` <- .Primitive("+")
+1 * 5
+```
+
+```{r}
+`*` <- .Primitive("*")
+1 * 5
+```
+
+#
+***Векторизуйте код, если это возможно***
+
+```{r}
+x <- runif(10**6)
+system.time( x <- x+1 )
+system.time( for (i in 1:length(x)) x[i] = x[i] + 1 )
+
+```
+
+```
+
